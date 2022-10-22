@@ -1,0 +1,15 @@
+[package]
+name = "tracer-rs"
+version = "0.1.0"
+authors = ["mrack <mrack@qq.com>"]
+edition = "2018"
+license = "https://github.com/Mrack/tracer-rs"
+publish = false
+
+[dependencies]
+frida-gum = { version = "0.8.1", features = [
+    "event-sink",
+    "invocation-listener",
+] }
+frida-gum-sys = "0.4.1"
+lazy_static = "1.4"
