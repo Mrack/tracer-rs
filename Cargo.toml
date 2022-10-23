@@ -11,5 +11,5 @@ frida-gum = { version = "0.8.1", features = [
     "event-sink",
     "invocation-listener",
 ] }
-frida-gum-sys = "0.4.1"
+frida-gum-sys = { version = "0.4.1"}
 lazy_static = "1.4"

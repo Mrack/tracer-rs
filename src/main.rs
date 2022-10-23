@@ -39,6 +39,14 @@ macro_rules! save_context {
             $map.insert(stringify!($name).to_string(), $ct.$name());
         )*
     };
+
+    
+    ($map:ident,$ct:expr) => {
+        save_context!($map,$ct, sp, fp, lr);
+        for i in 0..29{
+            $map.insert(format!("x{}", i), $ct.reg(i));
+        }
+    };
 }
 
 impl<'d> InvocationListener for AttachListener<'d> {
@@ -63,19 +71,29 @@ impl<'d> InvocationListener for AttachListener<'d> {
                         let mut ct = MAP.lock().unwrap();
                         if !ct.is_empty() {
                             let mut cur = HashMap::new();
-                            save_context!(cur,&_cpu_context,rip,r15,r14,r13,r12,r11,r10,r9,r8,rdi,rsi,rbp,rsp,rbx,rdx,rcx,rax);
+
+                            #[cfg(target_arch = "x86_64")]
+                            save_context!(cur,&_cpu_context,r15,r14,r13,r12,r11,r10,r9,r8,rdi,rsi,rbp,rsp,rbx,rdx,rcx,rax);
+
+                            #[cfg(target_arch = "aarch64")]
+                            save_context!(cur,&_cpu_context);
+
+
                             for (k,v) in cur.iter(){
-                                if k == "rip"{
-                                    continue;
-                                }
                                 if ct[k]!= *v {
                                     println!("\t{} {:x} => {:x}",k, ct[k],v);
                                 }
                             }
                         }
-                        save_context!(ct,&_cpu_context,rip,r15,r14,r13,r12,r11,r10,r9,r8,rdi,rsi,rbp,rsp,rbx,rdx,rcx,rax);
+                        #[cfg(target_arch = "x86_64")]
+                        save_context!(ct,&_cpu_context,r15,r14,r13,r12,r11,r10,r9,r8,rdi,rsi,rbp,rsp,rbx,rdx,rcx,rax);
+                        #[cfg(target_arch = "aarch64")]
+                        save_context!(ct,&_cpu_context);
                         
+                        #[cfg(target_arch = "x86_64")]
                         println!("{}",INS_INFO.lock().unwrap()[&_cpu_context.rip()]);
+                        #[cfg(target_arch = "aarch64")]
+                        println!("{}",INS_INFO.lock().unwrap()[&_cpu_context.pc()]);
                     });
                 }
                 
@@ -108,8 +126,10 @@ fn verify(input: &String) -> bool {
     }
     true
 }
-
-#[cfg(target_arch = "x86_64")]
+#[cfg(any(
+    target_arch = "x86_64",
+    target_arch = "aarch64"
+))]
 fn main() {
     let mut cmd_line = std::env::args();
     cmd_line.next();
