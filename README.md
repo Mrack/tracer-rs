@@ -31,4 +31,4 @@ todo.
 使用loader注入生成的tracer.dll (libtracer.so)
 
 ## 样例
-![Image text](https://raw.githubusercontent.com/Mrack/tracer-rs/master/pic/3.png)
+![Image text](https://raw.githubusercontent.com/Mrack/tracer-rs/master/pic/3.gif)
