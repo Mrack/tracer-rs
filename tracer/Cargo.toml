@@ -1,0 +1,27 @@
+[package]
+name = "tracer-rs"
+version = "0.1.0"
+authors = ["mrack <mrack@qq.com>"]
+edition = "2018"
+license = "https://github.com/Mrack/tracer-rs"
+publish = false
+
+
+[lib]
+name = "tracer"
+crate-type = ["dylib"]
+
+[dependencies]
+frida-gum = { path = "frida-rust/frida-gum", features = [
+    "invocation-listener",
+    "event-sink",
+] }
+frida-gum-sys = { path = "frida-rust/frida-gum-sys", features = [
+    "auto-download",
+] }
+lazy_static = "1.4"
+
+
+winapi = { version = "0.3.9", features = [
+    "winuser",
+] }

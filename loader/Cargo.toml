@@ -1,0 +1,17 @@
+[package]
+name = "loader"
+version = "0.1.0"
+authors = ["mrack <mrack@qq.com>"]
+edition = "2018"
+license = "https://github.com/Mrack/tracer-rs"
+publish = false
+
+[dependencies]
+winapi = { version = "0.3.9", features = [
+    "psapi",
+    "libloaderapi",
+    "processthreadsapi",
+    "handleapi",
+    "memoryapi",
+    "tlhelp32",
+] }
